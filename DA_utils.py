@@ -176,7 +176,7 @@ def quadratic_discriminant_analysis(data, reg_param=0.0, tol=1e-4, store_covaria
     score_train = model.score(X_train, y_train)
     covariance = model.covariance_
     means = model.means_
-    results = {'description': 'Linear Discriminant Analysis', 'model': model, 'score_test': score_test,
+    results = {'description': 'Quadratic Discriminant Analysis', 'model': model, 'score_test': score_test,
             'score_train': score_train, 'covariance': covariance, 'means': means}
 
     # Plot results
