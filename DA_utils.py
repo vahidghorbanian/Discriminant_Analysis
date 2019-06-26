@@ -6,6 +6,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import confusion_matrix
 
 from matplotlib import colors
 import matplotlib as mpl
@@ -13,7 +14,7 @@ import matplotlib as mpl
 # Initialization
 bins = 30
 alpha = 0.8
-width = 15
+width = 13
 height = 6
 test_size = 30
 num_sample_plot = 200
@@ -38,7 +39,7 @@ def multivariate_distribution(num_var, mean, cov_scale, num_datapoint, cov=None,
         prob = np.append(prob, k)
     data['joint_prob'] = prob
     if plot == True:
-        data.hist(bins=bins, facecolor='b', alpha=alpha, figsize=(width, height))
+        data.hist(bins=bins, facecolor='b', alpha=alpha, figsize=(width, height), edgecolor=[0, 0, 0])
         plt.suptitle('Distribution of random variables as well as their joint probability')
         plt.figure(figsize=(width, height))
         plt.title('Boxplot of generated variables')
@@ -72,10 +73,11 @@ def load_analyse_iris(plot=False):
             features_classes[ftr] = []
             for j, cls in enumerate(classes):
                 features_classes[ftr].append(data.loc[data['target']==cls, data.columns[i]])
-                plt.subplot('2'+str(int(np.ceil(len(features)/2)))+str(i+1))
-                plt.suptitle('Distribution of classes vs features')
-                plt.xlabel(ftr)
-                plt.hist(features_classes[ftr], bins=bins, histtype='barstacked', alpha=alpha)
+            plt.subplot('2' + str(int(np.ceil(len(features) / 2))) + str(i + 1))
+            plt.suptitle('Distribution of classes vs features')
+            plt.xlabel(ftr)
+            plt.hist(features_classes[ftr], bins=bins, histtype='barstacked', alpha=alpha, edgecolor=[0, 0, 0])
+            plt.legend(list(classes))
 
     # store most influential features
     data_filtered = data
@@ -141,6 +143,7 @@ def linear_discriminant_analysis(data, solver='svd', shrinkage=True, tol=1e-4, s
     intercept = model.intercept_
     covariance = model.covariance_
     means = model.means_
+
     results = {'description': 'Linear Discriminant Analysis', 'model': model, 'score_test': score_test,
             'score_train': score_train, 'coef': coef, 'intercept': intercept, 'covariance': covariance, 'means': means}
 

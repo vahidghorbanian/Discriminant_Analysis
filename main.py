@@ -16,10 +16,10 @@ reg_param = 0.0
 
 # Generate random variable sets with specified covariance matrix
 results_multivar = multivariate_distribution(num_var=num_var, mean=mean, cov_scale=cov_scale, num_datapoint=num_datapoint,
-                                    plot=False)
+                                    plot=True)
 
 # Load and analyze iris dataset
-data, data_filtered = load_analyse_iris(plot=False)
+data, data_filtered = load_analyse_iris(plot=True)
 
 # Linear Discriminant Analysis
 results_lda = linear_discriminant_analysis(data_filtered, solver=solver_lda, shrinkage=shrinkage, tol=tol,
