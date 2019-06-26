@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from mpl_toolkits.mplot3d import Axes3D
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
+from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.metrics import confusion_matrix
@@ -81,7 +82,8 @@ def load_analyse_iris(plot=False):
 
     # store most influential features
     data_filtered = data
-    data_filtered = data_filtered.drop(['sepal length (cm)', 'sepal width (cm)'], axis=1)
+    # data_filtered = data_filtered.drop(['sepal length (cm)', 'sepal width (cm)'], axis=1)
+    data_filtered = data_filtered.drop(['petal length (cm)', 'petal width (cm)'], axis=1)
     return data, data_filtered
 
 
@@ -181,6 +183,41 @@ def quadratic_discriminant_analysis(data, reg_param=0.0, tol=1e-4, store_covaria
     means = model.means_
     results = {'description': 'Quadratic Discriminant Analysis', 'model': model, 'score_test': score_test,
             'score_train': score_train, 'covariance': covariance, 'means': means}
+
+    # Plot results
+    if plot == True:
+        if len(features) == 2:
+            plot_clf(data, results)
+        else:
+            print('Plot does not work for the number of features larger than two.')
+    return results
+
+
+def gaussian_naive_bayes_analysis(data, plot=False):
+    print('\n***********************************************')
+    print('Naive Bayes Analysis')
+
+    # data prep
+    features = list(data.columns[:-1])
+    print('\nfeatures:', features)
+    classes = np.unique(data['target'])
+    print('classes:', classes)
+    X = data.loc[:, data.columns != 'target'].values
+    y = data.loc[:, data.columns == 'target'].values
+    y = y.ravel()
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, shuffle=None, random_state=0)
+
+    # lda model prep
+    model = GaussianNB()
+
+    # lda model training
+    model.fit(X_train, y_train)
+    score_test = model.score(X_test, y_test)
+    score_train = model.score(X_train, y_train)
+    means = model.theta_
+    variances = model.sigma_
+    results = {'description': 'Naive Bayes Analysis', 'model': model, 'score_test': score_test,
+            'score_train': score_train, 'variances': variances, 'means': means}
 
     # Plot results
     if plot == True:
